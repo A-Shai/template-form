@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/A-Shai/template-form/static/css/main.cca95b67.css",
-    "main.js": "/A-Shai/template-form/static/js/main.e3cb5b18.js",
-    "static/js/453.ed3810f9.chunk.js": "/A-Shai/template-form/static/js/453.ed3810f9.chunk.js",
-    "index.html": "/A-Shai/template-form/index.html",
-    "main.cca95b67.css.map": "/A-Shai/template-form/static/css/main.cca95b67.css.map",
-    "main.e3cb5b18.js.map": "/A-Shai/template-form/static/js/main.e3cb5b18.js.map",
-    "453.ed3810f9.chunk.js.map": "/A-Shai/template-form/static/js/453.ed3810f9.chunk.js.map"
+    "main.css": "//template-form/static/css/main.cca95b67.css",
+    "main.js": "//template-form/static/js/main.8a6ff75e.js",
+    "static/js/453.ed3810f9.chunk.js": "//template-form/static/js/453.ed3810f9.chunk.js",
+    "index.html": "//template-form/index.html",
+    "main.cca95b67.css.map": "//template-form/static/css/main.cca95b67.css.map",
+    "main.8a6ff75e.js.map": "//template-form/static/js/main.8a6ff75e.js.map",
+    "453.ed3810f9.chunk.js.map": "//template-form/static/js/453.ed3810f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cca95b67.css",
-    "static/js/main.e3cb5b18.js"
+    "static/js/main.8a6ff75e.js"
   ]
 }

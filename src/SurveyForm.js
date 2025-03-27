@@ -59,9 +59,11 @@ const Scorecard = () => {
       answers,
       score: calculateScore(),
     };
+    
+
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/submit-form`, { // Update with your backend URL
+      const response = await fetch(`http://localhost:5000/submit-form`, { // Update with your backend URL
         method: "POST",
         headers: {
           "Content-Type": "application/json",

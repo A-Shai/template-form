@@ -24,8 +24,8 @@ const Scorecard = () => {
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [contactPerson, setContactPerson] = useState("");
-  const [showSurvey, setShowSurvey] = useState(false); // To track when to show the survey questions
-  const [submitted, setSubmitted] = useState(false); // To track if the survey has been submitted and score should be shown
+  const [showSurvey, setShowSurvey] = useState(false); // Track survey visibility
+  const [submitted, setSubmitted] = useState(false); // Track if survey has been submitted
 
   const handleSelection = (index, value) => {
     const newAnswers = [...answers];
@@ -47,10 +47,8 @@ const Scorecard = () => {
 
   const isFormComplete = companyName && email && contactPerson;
 
-  // The handleSubmit function now sends data when the "Start Survey" button is clicked
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission to stay on the page
-    setShowSurvey(true); // Show the survey after initial info is filled
 
     const formData = {
       companyName,
@@ -59,11 +57,9 @@ const Scorecard = () => {
       answers,
       score: calculateScore(),
     };
-    
-
 
     try {
-      const response = await fetch(`http://localhost:5000/submit-form`, { // Update with your backend URL
+      const response = await fetch(`http://localhost:5000/submit-form`, { // Replace with your backend URL
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,6 +70,7 @@ const Scorecard = () => {
       const result = await response.json();
       if (response.ok) {
         console.log("Survey data successfully submitted:", result);
+        setSubmitted(true); // Mark survey as submitted and show score
       } else {
         console.log("Error submitting survey:", result);
       }
@@ -84,7 +81,6 @@ const Scorecard = () => {
 
   return (
     <div className="container">
-      {/* Title is placed outside the condition for the survey */}
       <h2 className="title">Health AI & Robotics Solution Maturity Survey</h2>
 
       {/* Initial form for collecting company info */}
@@ -118,7 +114,7 @@ const Scorecard = () => {
             />
           </div>
           <button
-            onClick={handleSubmit} // Send data on "Start Survey" click
+            onClick={() => setShowSurvey(true)} // Show the survey after initial info is filled
             disabled={!isFormComplete}
             className={`submit-btn ${isFormComplete ? "enabled" : "disabled"}`}
           >
@@ -149,9 +145,9 @@ const Scorecard = () => {
               ))}
               {/* Submit button for survey part */}
               <button
-                onClick={() => setSubmitted(true)} // Mark the survey as submitted
+                onClick={handleSubmit} // Submit survey data
                 className="submit-btn"
-                disabled={answers.includes(null)}
+                disabled={answers.includes(null)} // Disable if any answers are missing
               >
                 Submit Survey
               </button>

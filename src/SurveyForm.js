@@ -47,9 +47,10 @@ const Scorecard = () => {
 
   const isFormComplete = companyName && email && contactPerson;
 
+  // The handleSubmit function now sends data when the "Start Survey" button is clicked
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission to stay on the page
-    setSubmitted(true); // Mark the survey as submitted, which will trigger the score display
+    setShowSurvey(true); // Show the survey after initial info is filled
 
     const formData = {
       companyName,
@@ -60,7 +61,7 @@ const Scorecard = () => {
     };
 
     try {
-      const response = await fetch('${process.env.REACT_APP_BACKEND_URL}/submit-form', { // Update with your backend URL
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/submit-form`, { // Update with your backend URL
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,7 +116,7 @@ const Scorecard = () => {
             />
           </div>
           <button
-            onClick={() => setShowSurvey(true)} // Show the survey after initial info is filled
+            onClick={handleSubmit} // Send data on "Start Survey" click
             disabled={!isFormComplete}
             className={`submit-btn ${isFormComplete ? "enabled" : "disabled"}`}
           >
@@ -145,7 +146,11 @@ const Scorecard = () => {
                 </div>
               ))}
               {/* Submit button for survey part */}
-              <button onClick={handleSubmit} className="submit-btn" disabled={answers.includes(null)}>
+              <button
+                onClick={() => setSubmitted(true)} // Mark the survey as submitted
+                className="submit-btn"
+                disabled={answers.includes(null)}
+              >
                 Submit Survey
               </button>
             </>

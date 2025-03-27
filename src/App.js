@@ -1,23 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./SurveyForm.css";
+import SurveyForm from "./SurveyForm"; // Import your form
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>AI & Robotics Solution Maturity Survey</h1>
+      <SurveyForm />
     </div>
   );
 }

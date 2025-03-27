@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SurveyForm = () => {
+const Scorecard = () => {
   const questions = [
     {
       text: "How would you describe the current development stage of your AI or robotics solution?",
@@ -24,8 +24,8 @@ const SurveyForm = () => {
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [contactPerson, setContactPerson] = useState("");
-  const [showSurvey, setShowSurvey] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [showSurvey, setShowSurvey] = useState(false); // To track when to show the survey questions
+  const [submitted, setSubmitted] = useState(false); // To track if the survey has been submitted and score should be shown
 
   const handleSelection = (index, value) => {
     const newAnswers = [...answers];
@@ -47,90 +47,119 @@ const SurveyForm = () => {
 
   const isFormComplete = companyName && email && contactPerson;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent the default form submission to stay on the page
+    setSubmitted(true); // Mark the survey as submitted, which will trigger the score display
+
+    const formData = {
+      companyName,
+      email,
+      contactPerson,
+      answers,
+      score: calculateScore(),
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/submit-form", { // Update with your backend URL
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        console.log("Survey data successfully submitted:", result);
+      } else {
+        console.log("Error submitting survey:", result);
+      }
+    } catch (error) {
+      console.error("Error connecting to backend:", error);
+    }
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Health AI and Robotics Solution Maturity Survey</h2>
-      
-      {!submitted ? (
+    <div className="container">
+      {/* Title is placed outside the condition for the survey */}
+      <h2 className="title">Health AI & Robotics Solution Maturity Survey</h2>
+
+      {/* Initial form for collecting company info */}
+      {!showSurvey ? (
         <>
-          {!showSurvey ? (
-            <form onSubmit={() => setShowSurvey(true)} className="space-y-4">
-              <div>
-                <label className="block font-semibold">Company Name</label>
-                <input 
-                  type="text" 
-                  value={companyName} 
-                  onChange={(e) => setCompanyName(e.target.value)} 
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-semibold">Email Contact</label>
-                <input 
-                  type="email" 
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-semibold">Contact Person</label>
-                <input 
-                  type="text" 
-                  value={contactPerson} 
-                  onChange={(e) => setContactPerson(e.target.value)} 
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={!isFormComplete}
-                className={`w-full p-2 rounded text-white ${isFormComplete ? "bg-blue-600" : "bg-gray-400 cursor-not-allowed"}`}
-              >
-                Start Survey
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+          <div className="input-group">
+            <label className="label">Company Name</label>
+            <input
+              type="text"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              className="input-field"
+            />
+          </div>
+          <div className="input-group">
+            <label className="label">Email Contact</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input-field"
+            />
+          </div>
+          <div className="input-group">
+            <label className="label">Contact Person</label>
+            <input
+              type="text"
+              value={contactPerson}
+              onChange={(e) => setContactPerson(e.target.value)}
+              className="input-field"
+            />
+          </div>
+          <button
+            onClick={() => setShowSurvey(true)} // Show the survey after initial info is filled
+            disabled={!isFormComplete}
+            className={`submit-btn ${isFormComplete ? "enabled" : "disabled"}`}
+          >
+            Start Survey
+          </button>
+        </>
+      ) : (
+        <div className="survey-questions">
+          {/* Survey part */}
+          {!submitted ? (
+            <>
               {questions.map((q, index) => (
-                <div key={index} className="mb-4">
-                  <p className="font-semibold">{q.text}</p>
+                <div key={index} className="question-group">
+                  <p className="question-text">{q.text}</p>
                   {q.options.map((option, i) => (
-                    <label key={i} className="block mt-1">
+                    <label key={i} className="radio-label">
                       <input
                         type="radio"
                         name={`question-${index}`}
                         value={i}
                         onChange={() => handleSelection(index, i)}
-                        className="mr-2"
+                        className="radio-input"
                       />
                       {option}
                     </label>
                   ))}
                 </div>
               ))}
-              <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">
-                Submit
+              {/* Submit button for survey part */}
+              <button onClick={handleSubmit} className="submit-btn" disabled={answers.includes(null)}>
+                Submit Survey
               </button>
-            </form>
+            </>
+          ) : (
+            <div className="score">
+              {/* After submission, display the score */}
+              <h3>Your Score: {calculateScore()}</h3>
+              <p>{interpretScore(calculateScore())}</p>
+            </div>
           )}
-        </>
-      ) : (
-        <div className="mt-4 text-center">
-          <h3 className="text-lg font-bold">Your Score: {calculateScore()}</h3>
-          <p className="mt-2">{interpretScore(calculateScore())}</p>
         </div>
       )}
     </div>
   );
 };
 
-export default SurveyForm;
+export default Scorecard;

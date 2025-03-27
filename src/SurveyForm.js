@@ -59,7 +59,7 @@ const Scorecard = () => {
     };
 
     try {
-      const response = await fetch(`https://backend-survey-0ogf.onrender.com`, { //change Replace with your backend URL
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/submit-form`, { //change Replace with your backend URL
         method: "POST",
         headers: {
           "Content-Type": "application/json",

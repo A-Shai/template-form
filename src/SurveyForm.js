@@ -59,7 +59,7 @@ const Scorecard = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:5000/submit-form`, { // Replace with your backend URL
+      const response = await fetch(`https://backend-survey-0ogf.onrender.com`, { //change Replace with your backend URL
         method: "POST",
         headers: {
           "Content-Type": "application/json",

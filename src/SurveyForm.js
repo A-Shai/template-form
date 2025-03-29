@@ -57,6 +57,7 @@ const Scorecard = () => {
       answers,
       score: calculateScore(),
     };
+    console.log("Sending data to backend:", formData); // Debugging log
 
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/submit-form`, { //change Replace with your backend URL
